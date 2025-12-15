@@ -1,0 +1,112 @@
+#Создайте студента
+#Добавьте в таблицу students нового студента: имя — Hermione, фамилия — Granger.
+
+INSERT INTO students (name, second_name) VALUES ('Hermione', 'Granger') # id Hermione Granger будет равно 35
+
+
+#Создайте несколько книг и "выдайте" их студенту
+#Добавьте в таблицу books как минимум 5 книг, связав их с вашим студентом через поле taken_by_student_id. Используйте тематику, подходящую для персонажа (например, справочники, учебники, энциклопедии).
+
+INSERT INTO books (title, taken_by_student_id) VALUES ('Travovedenye', 35)
+INSERT INTO books (title, taken_by_student_id) VALUES ('Zahita ot temnix iscustv', 35)
+INSERT INTO books (title, taken_by_student_id) VALUES ('osnovi magic', 35)
+INSERT INTO books (title, taken_by_student_id) VALUES ('history magic', 35)
+INSERT INTO books (title, taken_by_student_id) VALUES ('arhimagia', 35)
+
+#Создайте группу и назначьте студента в неё
+#Добавьте в таблицу groups новую группу: название — Gryffindor, дата начала — '1st of September', дата окончания — '30th of June'.
+#Обновите запись студента, указав group_id, соответствующий только что созданной группе.
+
+INSERT INTO groups (title, start_date, end_date) VALUES ('Gryffindor', '1st of September', '30th of June') # id Gryffindor группы будет равно = 3
+UPDATE students SET group_id = 3 WHERE id = 35
+
+#Создайте несколько учебных предметов
+#Вставьте в таблицу subjets (обратите внимание на опечатку в названии!) как минимум 6 предметов из мира волшебства (например: 'Ancient Runes', 'Arithmancy', 'Potions', 'Transfiguration', 'Magical Law', 'Defence Against the Dark Arts').
+
+INSERT INTO subjets (title)
+VALUES
+	('Ancient Runes'), # id = 1
+	('Arithmancy'), # id = 2
+	('Potions'), # id = 3
+	('Transfiguration'), # id = 4
+	('Magical Law'), # id = 5
+	('Defence Against the Dark Arts'); # id = 6
+
+#Создайте по два занятия для каждого предмета
+#В таблице lessons добавьте занятия с описательными названиями (например: 'Monday 10.00') и привяжите их к соответствующим subject_id.
+
+INSERT INTO lessons (title, subject_id)
+VALUES
+	('Monday 10.00', 1),
+	('Tuesday 11.00', 1),
+	('Monday 11.00', 2),
+	('Friday 11.00', 2),
+	('Monday 12.00', 3),
+	('Sunday 10.00', 3),
+	('Monday 12.00', 4),
+	('Tuesday 12.00', 4),
+	('Tusday 13.00', 5),
+	('Friday 12.00', 5),
+	('Monday 13.00', 6),
+	('Sunday 12.00', 6);
+#Поставьте студенту оценки за все занятия
+#В таблице marks вставьте по одной оценке на каждое занятие для вашего студента. Используйте шкалу: 'Outstanding', 'Exceeds Expectations', 'Acceptable', 'Poor', 'Dreadful', 'Troll'. Hermione, скорее всего, получит в основном 'Outstanding' 😊
+
+INSERT INTO marks (value, lesson_id, student_id)
+VALUES
+	('Outstanding', 1, 35),
+	('Outstanding', 2, 35),
+	('Exceeds Expectations', 3, 35),
+	('Outstanding', 4, 35),
+	('Exceeds Expectations', 5, 35),
+	('Outstanding', 6, 35);
+
+#Выполните запросы для получения информации:
+#Все оценки студента.
+
+SELECT * from marks WHERE student_id = 35
+
+#Все книги, которые находятся у студента.
+
+SELECT title from books WHERE taken_by_student_id = 35
+
+#Одним запросом через JOIN: выведите всю доступную информацию о студенте — его группу, книги, оценки, названия занятий и предметов.
+
+SELECT * from students
+JOIN `groups` on students.group_id = groups.id
+JOIN books on students.id = books.taken_by_student_id
+JOIN marks on students.id = marks.student_id
+JOIN lessons on students.id = lessons.id
+JOIN subject on students.id = subject.students_id
+WHERE id = 35
+
+
+правильный запрос
+SELECT
+    students.name,
+    students.second_name,
+    `groups`.title AS group_name,
+    books.title AS book_title,
+    marks.value AS mark,
+    lessons.title AS lesson_time,
+    subjets.title AS subject_name
+FROM students
+JOIN `groups` ON students.group_id = groups.id
+JOIN books ON students.id = books.taken_by_student_id
+JOIN marks ON students.id = marks.student_id
+JOIN lessons ON marks.lesson_id = lessons.id
+JOIN subjets ON lessons.subject_id = subjets.id
+WHERE students.id = 35;
+
+
+
+
+
+
+
+
+
+
+
+
+
